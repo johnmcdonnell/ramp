@@ -21,7 +21,6 @@ try:
 except AttributeError:
     auc_scorer = metrics.auc
 
-
 class Metric(object):
     """
     Implements evaluate method that takes two
@@ -33,7 +32,13 @@ class Metric(object):
     @property
     def name(self):
         return self.__class__.__name__.lower()
-
+    
+    def set_context(self, context):
+        self.context = context
+    
+    def set_test_index(self, index):
+        self.test_index = index
+    
     def score(self, actual, predicted):
         raise NotImplementedError
 
@@ -44,17 +49,15 @@ class SKLearnMetric(Metric):
     
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-
+    
     def score(self, actual, predicted):
         return self.metric(actual, predicted, **self.kwargs)
-
 
 # Regression
 class RMSE(Metric):
     '''Mean Squared Error: The average of the squares of the errors.'''
     def score(self, actual, predicted):
         return sum((actual - predicted)**2)/float(len(actual))
-
 
 # Classification
 class AUC(SKLearnMetric):
@@ -64,7 +67,6 @@ class AUC(SKLearnMetric):
     '''
     reverse = True
     metric = staticmethod(auc_scorer)
-
 
 class F1(SKLearnMetric):
     '''F-measure: Weighted average of the precision and recall'''
@@ -108,7 +110,7 @@ class GeneralizedMCC(Metric):
                 s2 = sum([c[f,g] for g in range(n) for f in range(n) if f != k])
             s += s1 * s2
         return s
-
+    
     def score(self, actual, predicted):
         c = metrics.confusion_matrix(actual, predicted)
         n = c.shape[0]

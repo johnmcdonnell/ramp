@@ -190,6 +190,8 @@ def evaluate(config, ctx, predict_index,
     scores = {}
     for metric in config.metrics:
         name = get_metric_name(metric)
+        metric.set_context(ctx)
+        metric.set_test_index(predict_index)
         if hasattr(metric, 'score'):
             scores[name] = metric.score(actuals, preds)
         else:

@@ -27,7 +27,7 @@ class DataContext(object):
         """
         Parameters:
         -----------
-
+        
         store: string or ramp.store.Store object, default None
             An instance of `ramp.store.Store` or a path. If a path, Ramp will
             default to an `HDFPickleStore` at that path if PyTables is
@@ -61,7 +61,7 @@ class DataContext(object):
             self.train_index = self.data.index
         else:
             self.train_index = None
-
+        
         if prep_index is not None:
             self.prep_index = prep_index
         elif self.data is not None:
@@ -104,3 +104,4 @@ class DataContext(object):
         self.train_index = ctx['train_index']
         self.prep_index = ctx['prep_index']
         return ctx['config']
+
