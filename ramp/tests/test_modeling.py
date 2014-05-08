@@ -79,17 +79,18 @@ class TestBasicModeling(unittest.TestCase):
         self.assertEqual(fe.fity.shape, y.shape)
 
     def test_generate_test(self):
+        from ramp.modeling import generate_test
         model_def = self.make_model_def_basic()
         x, y, fitted_model = fit_model(model_def, self.data)
         x, y_true = generate_test(model_def, self.data[:3], fitted_model)
-        y_preds = fitted_model.predict(x)
+        y_preds = fitted_model.model_def.estimator.predict(x)
         self.assertEqual(len(x), 3)
         self.assertEqual(len(y_true), 3)
         self.assertEqual(len(y_preds), 3)
 
     def test_cross_validate(self):
         model_def = self.make_model_def_basic()
-        results  = cross_validate(model_def, self.data, folds=3)
+        results, reporters = cross_validate(model_def, self.data, folds=3)
         self.assertEqual(len(results), 3)
 
     def test_build_and_package_model(self):
@@ -112,6 +113,8 @@ class TestNestedModeling(unittest.TestCase):
         self.data = make_data(10)
 
     def test_predictions_nest(self):
+        from ramp.modeling import generate_test
+        
         inner_estimator = DummyEstimator()
         inner_model = ModelDefinition(features=[F('a')],
                                       estimator=inner_estimator,

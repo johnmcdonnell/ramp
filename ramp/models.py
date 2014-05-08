@@ -6,19 +6,19 @@ import hashlib
 import copy
 import numpy as np
 from sklearn import cross_validation, ensemble, linear_model
-from builders import build_featureset, build_target
+from builders import build_featureset_safe, build_target_safe
 from prettytable import PrettyTable, ALL
 
 debug = False
 
 def get_x(config, context):
-    x = build_featureset(config.features, context)
+    x = build_featureset_safe(config.features, context)
     if config.column_subset:
         x = x[config.column_subset]
     return x
 
 def get_y(config, context):
-    return build_target(config.target, context)
+    return build_target_safe(config.target, context)
 
 def get_xy(config, context):
     return get_x(config, context), get_y(config, context)
@@ -107,7 +107,7 @@ def predict(config, context, predict_index, fit_model=True, model_name=None):
         old = context.data
         context.data = context.data.reindex(predict_x.index)
         context.data[config.predictions_name] = preds
-        preds = build_target(config.prediction, context)
+        preds = build_target_safe(config.prediction, context)
         preds = preds.reindex(predict_x.index)
         context.data = old
     preds.name = ''
@@ -171,7 +171,7 @@ def evaluate(config, ctx, predict_index,
     
     try:
         if config.actual is not None:
-            actuals = build_target(config.actual, ctx).reindex(predict_index)
+            actuals = build_target_safe(config.actual, ctx).reindex(predict_index)
         else:
             actuals = y.reindex(predict_index)
     #TODO: HACK -- there may not be an actual attribute on the config
@@ -219,7 +219,7 @@ def predict_autosequence(config, context, predict_index, fit_model=True, update_
     # prediction post-processing
     if config.prediction is not None:
         context.data[config.predictions_name] = preds
-        preds = build_target(config.prediction, context)
+        preds = build_target_safe(config.prediction, context)
         preds = preds.reindex(predict_index)
     preds.name = ''
     return preds, x, y

@@ -106,8 +106,6 @@ class ModelDefinition(object):
         # Wrap estimator to return probabilities in the case of a classifier
         if isinstance(estimator, Estimator):
             self.estimator = estimator
-        elif not (hasattr(estimator, "fit") and hasattr(estimator, "predict")):
-            raise ValueError, "Invalid estimator: %s" % estimator
         elif hasattr(estimator, "predict_proba"):
             self.estimator = Probabilities(estimator)
         else:

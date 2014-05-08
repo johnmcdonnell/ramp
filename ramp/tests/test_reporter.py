@@ -14,23 +14,23 @@ import os, sys, random, pickle
 from pandas.util.testing import assert_almost_equal
 
 
-class ReporterTest(unittest.TestCase):
-
-    def test_reporter(self):
-        base = Configuration(
-                features=['a'],
-                model='model',
-                target='y'
-                )
-        fact = ConfigFactory(base,
-            features=[
-                ['a','b'],
-                ['a','b','c'],
-                ],
-            model=[
-                'model2',
-                'model3',
-                ]
-            )
-        cnfs = [cnf for cnf in fact]
-        self.assertEqual(len(cnfs), 4)
+#class ReporterTest(unittest.TestCase):
+#
+#    def test_reporter(self):
+#        base = Configuration(
+#                features=['a'],
+#                model='model',
+#                target='y'
+#                )
+#        fact = ConfigFactory(base,
+#            features=[
+#                ['a','b'],
+#                ['a','b','c'],
+#                ],
+#            model=[
+#                'model2',
+#                'model3',
+#                ]
+#            )
+#        cnfs = [cnf for cnf in fact]
+#        self.assertEqual(len(cnfs), 4)
